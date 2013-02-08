@@ -1,0 +1,11 @@
+{
+    "require": {
+        "php": ">=5.3.2",
+        "doctrine/mongodb-odm": "dev-master",
+        "silex/silex": "dev-master",
+        "smarty/smarty": "v3.1.13"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    }
+}
