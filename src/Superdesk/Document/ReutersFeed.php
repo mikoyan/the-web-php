@@ -183,7 +183,8 @@ class ReutersFeed extends Feed
     {
         if ($this->token === null || !$this->tokenIsValid()) {
             $client = $this->getClient('https://commerce.reuters.com/');
-            $response = $client->get('/rmd/rest/xml/login?username={username}&password={password}')->send();
+            $request = $client->get('/rmd/rest/xml/login?username={username}&password={password}');
+            $response = $request->send();
 
             if (!$response->isSuccessful()) {
                 throw new \RuntimeException("Can't get auth token");
@@ -241,7 +242,16 @@ class ReutersFeed extends Feed
      */
     private function getClient($url = self::URL)
     {
-        return new Client($url, $this->configuration);
+        return new Client(
+            $url,
+            array_merge($this->configuration, array(
+                'curl.options' => array(
+                    'CURLOPT_SSL_VERIFYHOST' => false,
+                    'CURLOPT_SSL_VERIFYPEER' => false,
+                    'CURLOPT_SSLVERSION' => 3,
+                )
+            ))
+        );
     }
 
     /**
