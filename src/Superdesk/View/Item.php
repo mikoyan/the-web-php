@@ -7,4 +7,5 @@ class Item
     public $id;
     public $headline;
     public $description;
+    public $groups = array();
 }

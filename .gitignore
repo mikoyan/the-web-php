@@ -1,3 +1,4 @@
-cache/
+app/cache/
 templates_c/
 vendor/
+web/media/
