@@ -1,5 +1,19 @@
 <?php
+/**
+ * @package Superdesk
+ */
 
+use SplStack;
+
+/**
+ * Block listing items
+ *
+ * @param array $params
+ * @param string $content
+ * @param Smarty_Internal_Template $template
+ * @param bool $repeat
+ * @return string
+ */
 function smarty_block_list_items($params, $content, $template, &$repeat)
 {
     static $lists;
@@ -24,7 +38,8 @@ function smarty_block_list_items($params, $content, $template, &$repeat)
         $items = $dm->getRepository('Superdesk\Document\Item')->findBy(
             $criteria,
             array('itemMeta.versionCreated' => 'desc'),
-            $params['length']
+            !empty($params['length']) ? $params['length'] : 25,
+            !empty($params['start']) ? $params['start'] : 0
         );
 
         $items = new ArrayIterator($items->toArray());

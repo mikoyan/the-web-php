@@ -1,0 +1,6 @@
+article { margin: 0 0 13px; }
+figure { margin: 0; }
+.pictures { background-color: #000; }
+.pictures figure { float: left; height: 100px; position: relative; }
+.pictures img { position: absolute; top: 0; left: 0; }
+.pictures img:hover { z-index: 1000; }

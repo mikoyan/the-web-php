@@ -9,6 +9,7 @@ namespace Superdesk\Ingest;
 
 use Superdesk\Document\Item;
 use Superdesk\Document\ItemRef;
+use Superdesk\Document\Feed;
 
 /**
  * Item Service
@@ -93,13 +94,14 @@ class ItemService
      * @param Newscoop\News\Item $item
      * @return void
      */
-    public function save(Item $item)
+    public function save(Item $item, Feed $feed)
     {
         $persisted = $this->repository->find($item->getId());
         if ($persisted !== null) {
             if ($item->getVersion() < $persisted->getVersion()) {
                 return;
-            } else { // @todo handle append signal
+            } else {
+                // @todo handle append signal
                 $this->odm->remove($persisted);
                 $this->odm->flush();
             }
@@ -107,6 +109,20 @@ class ItemService
 
         if ($item->isCanceled()) {
             return;
+        }
+
+        // @todo handle via event
+        $view = $item->render();
+        if (isset($view->content) && !empty($view->content->remote)) {
+            foreach ($view->content->remote as $content) {
+                if (!in_array($content->rendition, array('rend:viewImage', 'rend:thumbnail'))) {
+                    continue;
+                }
+
+                $dest =  __DIR__ . '/../../../web/media/' . sha1($content->href);
+                $url = $feed->getRemoteContentSrc($content->href);
+                file_put_contents($dest, file_get_contents($url));
+            }
         }
 
         $this->odm->persist($item);

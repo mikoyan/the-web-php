@@ -120,10 +120,10 @@ abstract class Feed
     /**
      * Get remote content src
      *
-     * @param Newscoop\News\RemoteContent $remoteContent
+     * @param string $href
      * @return string
      */
-    abstract public function getRemoteContentSrc(RemoteContent $remoteContent);
+    abstract public function getRemoteContentSrc($href);
 
     /**
      * Get item

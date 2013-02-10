@@ -1,12 +1,16 @@
 <?php
+/**
+ * @package Superdesk
+ */
 
-function smarty_function_media($params, $template)
+/**
+ * Get media url for given resource
+ *
+ * @param array $params
+ * @param Smarty_Internal_Template $template
+ * @return string
+ */
+function smarty_function_media($params, Smarty_Internal_Template $template)
 {
-    $dest =  __DIR__ . '/../../web/media/' . sha1($params['href']);
-    if (!file_exists($dest)) {
-        $url = sprintf('%s?token=%s', $params['href'], $params['token']);
-        file_put_contents($dest, file_get_contents($url));
-    }
-
-    return 'http://localhost/reuters-php/web/media/' . basename($dest);
+    return 'http://localhost/reuters-php/web/media/' . sha1($params['href']);
 }

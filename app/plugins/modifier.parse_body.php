@@ -1,15 +1,25 @@
 <?php
+/**
+ * @package Superdesk
+ */
 
-function smarty_modifier_parse_body($body)
+/**
+ * Parse body content out of given html
+ *
+ * @param string $html
+ * @return string
+ */
+function smarty_modifier_parse_body($html)
 {
     $doc = new DOMDocument();
-    $doc->loadHTML($body);
+    $doc->loadHTML($html);
     $body = $doc->getElementsByTagName('body')->item(0);
 
-    $contents = array();
+    $content = '';
     foreach ($body->childNodes as $node) {
-        $contents[] = trim($node->textContent);
+        $content .= trim($node->textContent);
+        $content .= "\n";
     }
 
-    return implode("\n", $contents);
+    return $content;
 }
