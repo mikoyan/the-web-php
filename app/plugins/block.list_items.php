@@ -3,8 +3,6 @@
  * @package Superdesk
  */
 
-use SplStack;
-
 /**
  * Block listing items
  *

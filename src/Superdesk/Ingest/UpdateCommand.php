@@ -8,6 +8,8 @@
 namespace Superdesk\Ingest;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Update Command
@@ -22,7 +24,11 @@ class UpdateCommand extends Command
         $this->setDescription('Ingest Update Command');
     }
 
-    protected function execute()
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         global $dm;
 

@@ -9,6 +9,8 @@ use Doctrine\MongoDB\Connection;
 
 require_once __DIR__ . '/autoload.php';
 
+error_reporting(-1);
+
 $config = new Configuration();
 $config->setProxyDir(__DIR__ . '/cache');
 $config->setProxyNamespace('Proxies');
