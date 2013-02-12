@@ -12,5 +12,5 @@
  */
 function smarty_function_media($params, Smarty_Internal_Template $template)
 {
-    return 'http://localhost/reuters-php/web/media/' . sha1($params['href']);
+    return sprintf('http://%s/media/%s', $_SERVER['HTTP_HOST'], sha1($params['href']));
 }

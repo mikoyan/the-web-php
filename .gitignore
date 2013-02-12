@@ -1,4 +1,4 @@
-app/cache/
-templates_c/
-vendor/
-web/media/
+/app/cache/
+/vendor/
+/web/media/
+/nbproject/

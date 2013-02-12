@@ -1,3 +1,5 @@
 #!/usr/bin/env sh
 
-/usr/bin/env php app/console.php ingest:update
+ROOT=`dirname $0`
+
+/usr/bin/env php $ROOT"/app/console.php" ingest:update
