@@ -66,7 +66,12 @@ class ReutersFeed extends Feed
                 continue;
             }
 
-            foreach ($this->getChannelItems($channel) as $channelItem) {
+            $items = array_merge(
+                $this->getChannelItems($channel),
+                $this->getChannelPackages($channel)
+            );
+
+            foreach ($items as $channelItem) {
                 $item = $this->getItem($channelItem->guid); // get the latest revision
                 if ($item !== null) {
                     $item->setFeed($this);
@@ -122,6 +127,37 @@ class ReutersFeed extends Feed
                     'channel' => $channel->alias,
                     'fieldsRef' => 'id',
                     'maxAge' => $this->getMaxAge($this->updated),
+                ),
+            ),
+        ));
+
+        $xml = $this->parseResponse($response);
+
+        $items = array();
+        foreach ($xml->result as $result) {
+            $items[] = (object) array(
+                'id' => (string) $result->id,
+                'guid' => (string) $result->guid,
+                'version' => (string) $result->version,
+            );
+        }
+
+        return $items;
+    }
+
+    /**
+     * Get list of packages in channel
+     *
+     * @return array
+     */
+    private function getChannelPackages($channel)
+    {
+        $response = $this->getClient()->get(array(
+            '/rmd/rest/xml/olr{?data*}',
+            array(
+                'data' => array(
+                    'token' => $this->getToken(),
+                    'channel' => $channel->alias,
                 ),
             ),
         ));

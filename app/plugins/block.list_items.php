@@ -14,11 +14,7 @@
  */
 function smarty_block_list_items($params, $content, $template, &$repeat)
 {
-    static $lists;
-
-    if ($lists === null) {
-        $lists = new SplStack();
-    }
+    $context = $template->getTemplateVars('gimme');
 
     if ($content === null) {
         global $dm;
@@ -41,18 +37,17 @@ function smarty_block_list_items($params, $content, $template, &$repeat)
         );
 
         $items = new ArrayIterator($items->toArray());
-        $lists->push($items);
+        $context->push();
     } else {
-        $items = $lists->pop();
+        $items = $context->popList();
     }
 
-    if ($items->valid()) {
-        $template->assign('item', $items->current()->render());
+    if ($repeat = $items->valid()) {
+        $context->item = $items->current()->render();
         $items->next();
-        if ($items->valid()) {
-            $repeat = true;
-            $lists->push($items);
-        }
+        $context->pushList($items);
+    } else {
+        $context->pop();
     }
 
     return $content;

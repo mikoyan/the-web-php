@@ -54,13 +54,51 @@ class ItemService
     }
 
     /**
+     * @return array
+     */
+    public function findByRefs(array $refs)
+    {
+        $items = array();
+        foreach ($refs as $ref) {
+            $item = $this->repository->find($ref->residRef);
+            if (!$item) {
+                $item = $this->fetchItem($ref);
+                if (!$item) {
+                    var_dump($ref); exit;
+                    continue;
+                }
+            }
+            $items[] = $item;
+        }
+
+        return $items;
+    }
+
+    /**
+     * Fetch missing item
+     *
+     * @param ItemRef $itemRef
+     * @return Superdesk\Document\Item
+     */
+    private function fetchItem($itemRef)
+    {
+        $feeds = $this->odm->getRepository('Superdesk\Document\ReutersFeed')->findAll();
+        foreach ($feeds as $feed) {
+            $item = $feed->getItem($itemRef->residRef);
+            $item->setFeed($feed);
+            $this->save($item, $feed);
+            return $item;
+        }
+    }
+
+    /**
      * Find item by given itemRef
      *
      * @param Newscoop\News\ItemRef $itemRef
      * @param Newscoop\News\Feed $feed
      * @return Newscoop\News\Item
      */
-    public function findByItemRef(ItemRef $itemRef, Feed $feed)
+    public function findByItemRef($itemRef)
     {
         $item = $this->find($itemRef->getResidRef());
         if (!$item) {

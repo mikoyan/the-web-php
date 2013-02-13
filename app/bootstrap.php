@@ -36,5 +36,5 @@ $smarty->setTemplateDir(__DIR__ . '/templates');
 $smarty->setCacheDir(__DIR__ . '/cache/smarty/');
 $smarty->setCompileDir(__DIR__ . '/cache/smarty/');
 
-$smarty->setCaching(Smarty::CACHING_LIFETIME_SAVED);
-$smarty->setCacheLifetime(300);
+//$smarty->setCaching(Smarty::CACHING_LIFETIME_SAVED);
+//$smarty->setCacheLifetime(300);

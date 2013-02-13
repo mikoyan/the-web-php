@@ -17,7 +17,12 @@ function smarty_modifier_parse_body($html)
 
     $content = '';
     foreach ($body->childNodes as $node) {
-        $content .= trim($node->textContent);
+        $nodeContent = trim($node->textContent);
+        if (empty($nodeContent)) {
+            continue;
+        }
+
+        $content .= $node->C14N();
         $content .= "\n";
     }
 

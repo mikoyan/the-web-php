@@ -7,6 +7,8 @@
 
 namespace Superdesk\View;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * anyItem View
  */
@@ -30,5 +32,12 @@ class Item
     /**
      * @var array
      */
-    public $groups = array();
+    public $groups;
+
+    /**
+     */
+    public function __construct()
+    {
+        $this->groups = new ArrayCollection();
+    }
 }

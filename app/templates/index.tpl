@@ -1,57 +1,55 @@
 {{ extends file="layout.tpl" }}
 
+{{ block "title" }}Top News{{ /block }}
+
 {{ block "content" }}
-<h1>by Reuters</h1>
+<section>
+    <h2>Top News</h2>
 
-<div class="row">
+    {{ list_items type="package" length=8 }}
+    <article class="package">
+        {{ $package = $gimme->item }}
+        {{ package_items class="icls:picture" group="main" length=1 }}
+            {{ remote_content rendition="rend:viewImage" }}
+            <figure class="package-fig">
+                <a href="{{ item_url item=$package }}"><img src="{{ media href=$content->href }}" width="{{ $content->width }}" height="{{ $content->height }}" alt="" title="{{ $gimme->item->description|escape }}" /></a>
+            </figure>
+            {{ /remote_content }}
+        {{ /package_items }}
 
-<section class="span8">
-    {{ list_items type="news" length=21 }}
-    <article class="item">
-        <header>
-            <strong>{{ $item->slugline|escape }}</strong>
-            <h2>{{ $item->headline|escape }}</h2>
-            <address>{{ if $item->byline }}by {{ $item->byline|escape }} {{ /if }}on {{ $item->itemMeta->versionCreated|date_format:"H:i d/m/y" }}</address>
-        </header>
+        <p>{{ $gimme->item->slugline|escape }}<br />{{ $gimme->item->itemMeta->versionCreated|date_format:"r" }}</p>
+        <h1><a href="{{ item_url item=$package }}">{{ $gimme->item->headline|escape }}</a></h1>
 
-        {{ if isset($item->content) && isset($item->content->inline) }}
-        <pre>{{ $item->content->inline->content|parse_body }}</pre>
-        {{ elseif isset($item->content) && !empty($item->content->remote) }}
-            {{ foreach $item->content->remote as $content }}
-                {{ if $content->rendition == 'rend:viewImage' }}
-                <figure>
-                    <img src="{{ media href=$content->href }}" width="{{ $content->width }}" height="{{ $content->height }}" alt="" title="{{ $item->description|escape }}" />
-                </figure>
-                {{ /if }}
-            {{ /foreach }}
-        {{ /if }}
-
-        <footer>&copy; {{ $item->creditline|escape }}</footer>
+        <footer>&copy; {{ $gimme->item->creditline|escape }}</footer>
     </article>
     {{ /list_items }}
 </section>
 
-<section class="span4 pictures">
-    {{ list_items type="news" class="icls:picture" length=13 }}
-        {{ foreach $item->content->remote as $content }}
-        {{ if $content->rendition == 'rend:thumbnail' }}
-        <figure style="width:{{ $content->width }}px">
-            <img src="{{ media href=$content->href }}" width="{{ $content->width }}" height="{{ $content->height }}" alt="" title="{{ $item->contentMeta->description|escape }}" />
-        </figure>
-        {{ /if }}
-        {{ /foreach }}
+<section class="ticker">
+    <h2>Ticker</h2>
+    
+    {{ list_items type="news" length=21 }}
+    <article class="news">
+        <header>
+            <p>{{ $gimme->item->slugline|escape }}</p>
+            <h4>{{ $gimme->item->headline|escape }}</h3>
+            <address>{{ if $gimme->item->byline|escape }}by {{ $gimme->item->byline|escape }} {{ /if }}on {{ $gimme->item->itemMeta->versionCreated|date_format:"H:i d/m/y" }}</address>
+        </header>
+
+        {{ text }}
+        <pre>{{ $gimme->item->description|escape }}</pre>
+        {{ /text }}
+
+        {{ picture }}
+            {{ remote_content rendition="rend:viewImage" }}
+            <figure>
+                <img src="{{ media href=$content->href }}" width="{{ $content->width }}" height="{{ $content->height }}" alt="" title="{{ $gimme->item->description|escape }}" />
+            </figure>
+            {{ /remote_content }}
+        {{ /picture }}
+
+        <footer>&copy; {{ $gimme->item->creditline|escape }}</footer>
+    </article>
     {{ /list_items }}
 </section>
-
-</div><!-- /.row -->
-{{ /block }}
-
-{{ block "script" }}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-<script src="{{ asset href="bootstrap/js/bootstrap.min.js" }}"></script>
-<script>
-$(function() {
-    $('.pictures img').tooltip({'placement': 'bottom'});
-});
-</script>
 {{ /block }}

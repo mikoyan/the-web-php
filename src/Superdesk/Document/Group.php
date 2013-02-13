@@ -93,6 +93,7 @@ class Group
     public function render()
     {
         return (object) array(
+            'id' => $this->id,
             'role' => $this->role,
             'mode' => $this->mode,
             'refs' => $this->refs->map(function ($ref) { return $ref->render(); }),

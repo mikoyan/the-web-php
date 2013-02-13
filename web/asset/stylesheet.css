@@ -4,3 +4,19 @@ figure { margin: 0; }
 .pictures figure { float: left; height: 100px; position: relative; }
 .pictures img { position: absolute; top: 0; left: 0; }
 .pictures img:hover { z-index: 1000; }
+
+.package {
+    height: 1%;
+    overflow: hidden;
+}
+
+.package-fig {
+    float: left;
+    margin-right: 13px;
+}
+
+section article {
+    margin-top: 13px;
+    padding-top: 13px;
+    border-top: 1px solid silver;
+}

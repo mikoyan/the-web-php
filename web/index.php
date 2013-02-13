@@ -3,11 +3,15 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Silex\Application;
+use Superdesk\View\Context;
+use Superdesk\View\ContextCollection;
 
 $loader = require_once __DIR__ . '/../app/bootstrap.php';
 
 $app = new Application();
 $app['debug'] = true;
+
+$app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 // add access log
 $app->finish(function (Request $request, Response $response) {
@@ -25,13 +29,25 @@ $app->finish(function (Request $request, Response $response) {
 
 // route item
 $app->get('/i/{id}', function ($id) use ($dm, $smarty) {
-    $smarty->assign('item', $dm->getRepository('Superdesk\Document\Item')->find($id));
+    $context = new Context();
+    $context->item = $dm->getRepository('Superdesk\Document\Item')->find($id)->render();
+    $smarty->assign('gimme', new ContextCollection($context));
     return $smarty->fetch('item.tpl');
-});
+})->bind('item');
 
 // route index
 $app->get('/', function () use ($smarty) {
+    $smarty->assign('gimme', new ContextCollection());
     return $smarty->fetch('index.tpl');
+})->bind('home');
+
+// services
+$app['dm'] = $app->share(function () use ($dm) {
+    return $dm;
+});
+
+$app['item_service'] = $app->share(function () use ($app) {
+    return new Superdesk\Ingest\ItemService($app['dm']);
 });
 
 $app->run();
